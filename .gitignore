@@ -14,18 +14,18 @@ venv/
 cf_tunnel.log
 server.log
 
-# Old V1/V2 scripts
-categorizer.py
-classify_unlabeled.py
-config.py
-gmail_client.py
-main.py
-requirements.txt
-progress.json
-progress_unlabeled.json
-prompt-mailsense-v2.md.txt
-mailsense-v3-prompt.md.txt
-memory/
+# Old V1/V2 root scripts only
+/categorizer.py
+/classify_unlabeled.py
+/config.py
+/gmail_client.py
+/main.py
+/requirements.txt
+/progress.json
+/progress_unlabeled.json
+/prompt-mailsense-v2.md.txt
+/mailsense-v3-prompt.md.txt
+/memory/
 
 # OS
 .DS_Store
