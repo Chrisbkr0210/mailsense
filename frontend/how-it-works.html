@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailSense — Comment ça marche & Sécurité</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Mail<span>Sense</span></div>
+  <div class="nav-links">
+    <a href="/">Accueil</a>
+  </div>
+</nav>
+
+<main class="container hiw-section">
+
+  <div style="text-align:center; margin-bottom:60px;">
+    <h1 style="font-size:2.2rem; font-weight:800; margin-bottom:12px;">
+      Comment ça marche & Sécurité
+    </h1>
+    <p style="color:var(--text2); max-width:560px; margin:0 auto;">
+      Transparence totale sur ce que nous lisons, ce que nous envoyons à l'IA, et ce que nous stockons (spoiler : rien).
+    </p>
+  </div>
+
+  <div class="hiw-block">
+    <div>
+      <div class="hiw-label">Étape 1</div>
+      <div style="font-size:2rem;">🔗</div>
+    </div>
+    <div>
+      <h2>Connexion Gmail</h2>
+      <p>
+        Vous autorisez MailSense à accéder à votre Gmail via Google OAuth2 — le même protocole utilisé par toutes les applications Google (Gmail mobile, etc.).
+      </p>
+      <div class="highlight-box">
+        Nous demandons 3 permissions : <strong>lire vos emails</strong>, <strong>gérer les labels</strong> et <strong>modifier les labels d'emails</strong>. Nous ne lisons pas le corps complet, n'envoyons rien, et ne supprimons rien.
+      </div>
+    </div>
+  </div>
+
+  <div class="hiw-block">
+    <div>
+      <div class="hiw-label">Étape 2</div>
+      <div style="font-size:2rem;">👁️</div>
+    </div>
+    <div>
+      <h2>Ce que nous lisons</h2>
+      <p>Pour chaque email, nous récupérons uniquement :</p>
+      <ul style="margin:12px 0 16px 0;">
+        <li>L'adresse expéditeur (champ "De")</li>
+        <li>L'objet du mail (champ "Sujet")</li>
+        <li>Les 200 premiers caractères du corps (extrait visible dans la liste Gmail)</li>
+      </ul>
+      <p>Nous n'accédons pas aux pièces jointes, aux destinataires, ni au corps complet des emails.</p>
+    </div>
+  </div>
+
+  <div class="hiw-block">
+    <div>
+      <div class="hiw-label">Étape 3</div>
+      <div style="font-size:2rem;">🤖</div>
+    </div>
+    <div>
+      <h2>L'IA de classification</h2>
+      <p>
+        Nous utilisons <strong>Claude par Anthropic</strong> pour classer vos emails dans 11 catégories.
+        Les données (expéditeur + objet + extrait) sont envoyées à l'API Anthropic pour classification.
+      </p>
+      <div class="highlight-box">
+        Anthropic applique une politique de non-stockage des données API. Vos emails ne sont pas utilisés pour entraîner des modèles. Voir la <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener">politique de confidentialité d'Anthropic</a>.
+      </div>
+    </div>
+  </div>
+
+  <div class="hiw-block">
+    <div>
+      <div class="hiw-label">Sécurité</div>
+      <div style="font-size:2rem;">🛡️</div>
+    </div>
+    <div>
+      <h2>Zéro stockage — comment c'est possible ?</h2>
+      <ul>
+        <li>Aucune base de données (SQL, NoSQL, fichiers)</li>
+        <li>Votre token Gmail est stocké en RAM uniquement, durée de vie 2 heures</li>
+        <li>Vos emails transitent en mémoire et sont purgés après le tri</li>
+        <li>Nos serveurs ne conservent aucune donnée entre les sessions</li>
+        <li>Aucun compte utilisateur créé, aucun email enregistré</li>
+      </ul>
+      <div class="highlight-box">
+        Techniquement : tout est traité via des variables en mémoire RAM. Après le tri, un <code style="color:var(--accent2);">gc.collect()</code> explicite purge toutes les références. Si le serveur redémarre, tout est perdu — c'est voulu.
+      </div>
+    </div>
+  </div>
+
+  <div class="hiw-block" style="border-bottom:none;">
+    <div>
+      <div class="hiw-label">Labels</div>
+      <div style="font-size:2rem;">🏷️</div>
+    </div>
+    <div>
+      <h2>Labels créés dans Gmail</h2>
+      <p>
+        MailSense crée 11 labels directement dans votre Gmail :
+        ADMINISTRATIF, BANQUE_FINANCE, FACTURES_PAIEMENTS, CONTRATS_ABONNEMENTS,
+        EMPLOI_PRO, SANTE, TRANSPORT_VOYAGE, NEWSLETTERS_MARKETING,
+        RESEAUX_SOCIAUX, PERSONNEL, SPAM_PHISHING.
+      </p>
+      <p style="margin-top:12px;">
+        Si un label du même nom existe déjà, un suffixe <code style="color:var(--accent2);">_MS</code> est ajouté pour éviter les conflits.
+        Vous pouvez supprimer ces labels à tout moment depuis les paramètres Gmail.
+      </p>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:48px;">
+    <a href="/auth/login" class="btn btn-primary btn-lg">Commencer maintenant</a>
+  </div>
+
+</main>
+
+<footer>
+  <div>MailSense V3 · Service gratuit pendant le lancement · Aucune donnée stockée</div>
+</footer>
+
+</body>
+</html>

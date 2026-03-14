@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailSense — Politique de confidentialité</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Mail<span>Sense</span></div>
+  <div class="nav-links">
+    <a href="/">Accueil</a>
+  </div>
+</nav>
+
+<main class="container" style="padding: 60px 24px; max-width: 760px;">
+
+  <div style="margin-bottom: 48px;">
+    <p style="color: var(--accent2); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Politique de confidentialité</p>
+    <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 12px;">Ce que nous faisons de vos données</h1>
+    <p style="color: var(--text2);">Dernière mise à jour : mars 2025 · MailSense est en phase bêta.</p>
+  </div>
+
+  <!-- Résumé en clair -->
+  <div class="card" style="margin-bottom: 40px; border-left: 3px solid var(--success);">
+    <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--success);">En résumé (version honnête)</h2>
+    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+      <li style="color: var(--text2); font-size: 0.95rem;">✅ <strong style="color: var(--text);">Zéro base de données.</strong> Nous ne stockons rien sur nos serveurs.</li>
+      <li style="color: var(--text2); font-size: 0.95rem;">✅ <strong style="color: var(--text);">Vos emails restent les vôtres.</strong> On lit expéditeur, objet et les premières lignes — c'est tout.</li>
+      <li style="color: var(--text2); font-size: 0.95rem;">✅ <strong style="color: var(--text);">Traitement en mémoire vive.</strong> Les données sont supprimées dès la fin du tri.</li>
+      <li style="color: var(--text2); font-size: 0.95rem;">✅ <strong style="color: var(--text);">Aucun compte créé.</strong> Pas de mot de passe, pas de profil, pas d'email enregistré.</li>
+      <li style="color: var(--text2); font-size: 0.95rem;">✅ <strong style="color: var(--text);">Pas de revente.</strong> Nous ne vendons, ne partageons, ni ne monétisons vos données.</li>
+    </ul>
+  </div>
+
+  <!-- Sections détaillées -->
+  <div style="display: flex; flex-direction: column; gap: 36px;">
+
+    <section>
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;">1. Qui sommes-nous</h2>
+      <p style="color: var(--text2); line-height: 1.8;">
+        MailSense est un service en phase bêta permettant de trier automatiquement les emails Gmail à l'aide de l'intelligence artificielle. Le service est fourni à titre gratuit pendant la période bêta.
+      </p>
+    </section>
+
+    <section>
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;">2. Données collectées</h2>
+      <p style="color: var(--text2); line-height: 1.8; margin-bottom: 12px;">
+        Lors de l'utilisation de MailSense, nous accédons temporairement aux informations suivantes de votre boîte Gmail :
+      </p>
+      <ul style="color: var(--text2); line-height: 2; padding-left: 20px;">
+        <li>L'adresse email de l'expéditeur (champ "De")</li>
+        <li>L'objet de l'email (champ "Sujet")</li>
+        <li>Les 200 premiers caractères du corps du message</li>
+      </ul>
+      <p style="color: var(--text2); line-height: 1.8; margin-top: 12px;">
+        Nous n'accédons pas aux pièces jointes, aux destinataires en copie, aux corps complets des emails, ni à aucune autre donnée de votre compte Google.
+      </p>
+    </section>
+
+    <section>
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;">3. Comment nous utilisons ces données</h2>
+      <p style="color: var(--text2); line-height: 1.8; margin-bottom: 12px;">
+        Les données de vos emails sont utilisées <strong style="color: var(--text);">uniquement</strong> pour les classifier dans l'une des 11 catégories définies (Administratif, Banque, Santé, etc.). Elles sont transmises à l'API Claude d'Anthropic pour cette classification.
+      </p>
+      <p style="color: var(--text2); line-height: 1.8;">
+        Après la classification, les labels Gmail correspondants sont créés et appliqués directement dans votre compte Gmail via l'API Google.
+      </p>
+    </section>
+
+    <section>
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;">4. Durée de conservation — zéro persistance</h2>
+      <p style="color: var(--text2); line-height: 1.8; margin-bottom: 12px;">
+        <strong style="color: var(--text);">Aucune donnée n'est conservée sur nos serveurs au-delà de la durée de votre session.</strong>
+      </p>
+      <p style="color: var(--text2); line-height: 1.8; margin-bottom: 12px;">
+        Techniquement : toutes les données (token OAuth, emails, résultats de classification) sont stockées en mémoire RAM pendant le traitement. Votre session expire automatiquement après 2 heures. À l'expiration, toutes les données associées sont supprimées de la mémoire et détruites par le garbage collector Python.
+      </p>
+      <p style="color: var(--text2); line-height: 1.8;">
+        Nous n'utilisons ni base de données, ni fichiers sur disque, ni cookies persistants pour stocker vos informations personnelles.
+      </p>
+    </section>
+
+    <section>
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;">5. Partage avec des tiers</h2>
+      <p style="color: var(--text2); line-height: 1.8; margin-bottom: 12px;">
+        Vos données sont transmises à un seul tiers dans le cadre du service :
+      </p>
+      <div class="highlight-box" style="margin-bottom: 12px;">
+        <strong style="color: var(--text);">Anthropic (API Claude)</strong> — Les données des emails (expéditeur, objet, extrait) sont envoyées à l'API Claude d'Anthropic pour classification. Anthropic s'engage à ne pas utiliser les données soumises via leur API pour entraîner leurs modèles. Voir la <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener">politique de confidentialité d'Anthropic</a>.
+      </div>
+      <p style="color: var(--text2); line-height: 1.8;">
+        Nous ne vendons, ne louons, ni ne partageons vos données avec aucun autre tiers à des fins commerciales ou publicitaires.
+      </p>
+    </section>
+
+    <section>
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;">6. Autorisation Google et révocation</h2>
+      <p style="color: var(--text2); line-height: 1.8; margin-bottom: 12px;">
+        L'accès à votre Gmail est accordé via OAuth2 Google. Vous pouvez révoquer cet accès à tout moment depuis les paramètres de votre compte Google :
+      </p>
+      <div class="highlight-box">
+        Mon compte Google → Sécurité → Vos connexions à des applications tierces → MailSense → Supprimer l'accès
+      </div>
+    </section>
+
+    <section>
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;">7. Vos droits</h2>
+      <p style="color: var(--text2); line-height: 1.8;">
+        Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Dans le cas de MailSense, ce droit est structurellement garanti par notre architecture : aucune donnée n'étant stockée, il n'y a rien à supprimer au-delà de votre session active. Pour toute question, contactez-nous.
+      </p>
+    </section>
+
+    <section>
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;">8. Sécurité</h2>
+      <p style="color: var(--text2); line-height: 1.8;">
+        Les communications entre votre navigateur et nos serveurs sont chiffrées via HTTPS. Les tokens OAuth ne sont jamais écrits sur disque ni logués. Nous appliquons les en-têtes de sécurité HTTP standards (HSTS, X-Frame-Options, X-Content-Type-Options).
+      </p>
+    </section>
+
+    <section>
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;">9. Modifications</h2>
+      <p style="color: var(--text2); line-height: 1.8;">
+        Cette politique peut être mise à jour. La date de dernière modification est indiquée en haut de cette page. Nous vous encourageons à la consulter avant chaque utilisation pendant la phase bêta.
+      </p>
+    </section>
+
+  </div>
+
+  <div style="margin-top: 48px; text-align: center;">
+    <a href="/auth/login" class="btn btn-primary">Utiliser MailSense</a>
+  </div>
+
+</main>
+
+<footer>
+  <div>MailSense V3 · <a href="/comment-ca-marche">Comment ça marche</a> · Politique de confidentialité</div>
+</footer>
+
+</body>
+</html>

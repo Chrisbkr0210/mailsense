@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailSense — Tri en cours…</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ── Hero counter ── */
+    .hero-counter {
+      text-align: center;
+      padding: 48px 24px 32px;
+    }
+    .counter-number {
+      font-size: clamp(4rem, 12vw, 8rem);
+      font-weight: 900;
+      letter-spacing: -4px;
+      line-height: 1;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: all 0.3s ease;
+      font-variant-numeric: tabular-nums;
+    }
+    .counter-label {
+      color: var(--text2);
+      font-size: 1rem;
+      margin-top: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .counter-sub {
+      color: var(--text2);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    /* ── Category cards grid ── */
+    .cat-dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      padding: 0 24px 32px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .cat-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cat-card.active {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    /* Barre de fond animée */
+    .cat-card-fill {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 3px;
+      border-radius: 0 0 14px 14px;
+      transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .cat-icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .cat-card-name {
+      font-size: 0.72rem;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .cat-card-count {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      transition: color 0.3s;
+    }
+    .cat-card-count.bump {
+      color: #a78bfa;
+    }
+
+    /* ── Global progress bar ── */
+    .global-progress {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+    }
+    .gp-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .gp-pct {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--accent2);
+    }
+    .gp-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 0.85rem;
+      color: var(--text2);
+    }
+    .gp-meta span strong { color: var(--text); }
+
+    /* ── Done overlay ── */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,19,0.95);
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+    }
+    .done-overlay.show { display: flex; }
+
+    .done-emoji {
+      font-size: 5rem;
+      animation: bounce 0.6s ease;
+    }
+    @keyframes bounce {
+      0%   { transform: scale(0.3); opacity: 0; }
+      60%  { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ── Confetti ── */
+    .confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 199;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      animation: confetti-fall linear forwards;
+      border-radius: 2px;
+    }
+    @keyframes confetti-fall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── Pulse dot ── */
+    .pulse-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 8px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      text-align: center;
+      padding: 0 0 24px;
+      color: var(--text2);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Mail<span>Sense</span></div>
+  <div class="nav-links">
+    <span style="color:var(--text2); font-size:0.85rem;"><span class="pulse-dot"></span>Tri en cours</span>
+  </div>
+</nav>
+
+<!-- Confetti container -->
+<div class="confetti-container" id="confetti"></div>
+
+<!-- Done overlay -->
+<div class="done-overlay" id="done-overlay">
+  <div class="done-emoji">🎉</div>
+  <h1 style="font-size:2.2rem; font-weight:900; margin:20px 0 8px;">Votre boîte est triée !</h1>
+  <p style="color:var(--text2); font-size:1.1rem; margin-bottom:32px;" id="done-count">…</p>
+  <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
+    <a href="https://mail.google.com" target="_blank" rel="noopener" class="btn btn-primary btn-lg">📬 Ouvrir Gmail</a>
+    <a href="#" id="done-result-btn" class="btn btn-secondary btn-lg">Voir les résultats</a>
+  </div>
+</div>
+
+<main>
+
+  <!-- Compteur principal -->
+  <div class="hero-counter">
+    <div class="counter-number" id="counter">0</div>
+    <div class="counter-label">emails traités</div>
+    <div class="counter-sub" id="counter-sub">Initialisation…</div>
+  </div>
+
+  <!-- Status -->
+  <div class="status-bar" id="status-bar">Récupération des emails…</div>
+
+  <!-- Dashboard catégories -->
+  <div class="cat-dashboard" id="cat-dashboard">
+    <!-- généré par JS -->
+  </div>
+
+  <!-- Barre globale -->
+  <div class="global-progress">
+    <div class="gp-row">
+      <span class="gp-pct" id="gp-pct">0%</span>
+      <div class="gp-meta">
+        <span><strong id="gp-count">0</strong> / <strong id="gp-total">…</strong></span>
+        <span>⏱ <strong id="gp-eta">—</strong></span>
+        <span>💰 <strong id="gp-cost">$0.00</strong></span>
+      </div>
+    </div>
+    <div class="progress-bar-bg" style="height:10px;">
+      <div class="progress-bar-fill" id="gp-bar" style="width:0%"></div>
+    </div>
+    <p style="color:var(--text2); font-size:0.82rem; margin-top:12px; text-align:center;">
+      Vous pouvez fermer cette page — le tri continue en arrière-plan.
+    </p>
+  </div>
+
+</main>
+
+<script>
+// ── Config catégories ────────────────────────────────────────────────────────
+const CATS = [
+  { id: "ADMINISTRATIF",         label: "Administratif",      icon: "📄", color: "#3b82f6" },
+  { id: "BANQUE_FINANCE",        label: "Banque & Finance",   icon: "🏦", color: "#22c55e" },
+  { id: "FACTURES_PAIEMENTS",    label: "Factures",           icon: "🧾", color: "#a855f7" },
+  { id: "CONTRATS_ABONNEMENTS",  label: "Contrats",           icon: "📝", color: "#f97316" },
+  { id: "EMPLOI_PRO",            label: "Emploi & Pro",       icon: "💼", color: "#0ea5e9" },
+  { id: "SANTE",                 label: "Santé",              icon: "🏥", color: "#ef4444" },
+  { id: "TRANSPORT_VOYAGE",      label: "Transport",          icon: "✈️", color: "#10b981" },
+  { id: "NEWSLETTERS_MARKETING", label: "Newsletters",        icon: "📰", color: "#eab308" },
+  { id: "RESEAUX_SOCIAUX",       label: "Réseaux Sociaux",    icon: "📱", color: "#8b5cf6" },
+  { id: "PERSONNEL",             label: "Personnel",          icon: "👤", color: "#60a5fa" },
+  { id: "SPAM_PHISHING",         label: "Spam & Phishing",    icon: "🗑️", color: "#6b7280" },
+];
+
+// ── State ────────────────────────────────────────────────────────────────────
+const token = new URLSearchParams(window.location.search).get("token") || "";
+let startTime = Date.now();
+let lastProcessed = 0;
+let animFrame = null;
+let displayedCount = 0;
+let targetCount = 0;
+const catDisplayed = {};
+const catTarget = {};
+CATS.forEach(c => { catDisplayed[c.id] = 0; catTarget[c.id] = 0; });
+
+// ── Build dashboard ──────────────────────────────────────────────────────────
+function buildDashboard() {
+  const grid = document.getElementById("cat-dashboard");
+  CATS.forEach(cat => {
+    const card = document.createElement("div");
+    card.className = "cat-card";
+    card.id = "card-" + cat.id;
+    card.innerHTML =
+      '<div class="cat-icon">' + cat.icon + '</div>' +
+      '<div class="cat-card-name">' + cat.label + '</div>' +
+      '<div class="cat-card-count" id="cnt-' + cat.id + '">0</div>' +
+      '<div class="cat-card-fill" id="fill-' + cat.id + '" style="background:' + cat.color + ';width:0%"></div>';
+    grid.appendChild(card);
+  });
+}
+
+// ── Smooth animation loop ────────────────────────────────────────────────────
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function animateCounters() {
+  const speed = 0.12;
+
+  // Counter principal
+  if (Math.abs(targetCount - displayedCount) > 0.5) {
+    displayedCount = lerp(displayedCount, targetCount, speed);
+    document.getElementById("counter").textContent =
+      Math.round(displayedCount).toLocaleString("fr-FR");
+  }
+
+  // Compteurs catégories
+  let maxCat = 0;
+  CATS.forEach(cat => {
+    if (catTarget[cat.id] > maxCat) maxCat = catTarget[cat.id];
+  });
+
+  CATS.forEach(cat => {
+    const t = catTarget[cat.id];
+    const d = catDisplayed[cat.id];
+    if (Math.abs(t - d) > 0.5) {
+      catDisplayed[cat.id] = lerp(d, t, speed);
+      const val = Math.round(catDisplayed[cat.id]);
+      const el = document.getElementById("cnt-" + cat.id);
+      if (el) el.textContent = val.toLocaleString("fr-FR");
+
+      // Barre proportionnelle
+      const fillEl = document.getElementById("fill-" + cat.id);
+      if (fillEl && maxCat > 0) {
+        fillEl.style.width = (t / maxCat * 100) + "%";
+      }
+    }
+  });
+
+  animFrame = requestAnimationFrame(animateCounters);
+}
+
+// ── Update UI avec données SSE ───────────────────────────────────────────────
+function updateUI(data) {
+  const processed = data.processed || 0;
+  const total     = data.total     || 0;
+  const cats      = data.categories || {};
+  const cost      = data.cost       || 0;
+
+  // Cibles animation
+  targetCount = processed;
+
+  CATS.forEach(cat => {
+    catTarget[cat.id] = cats[cat.id] || 0;
+    // Bump si changement
+    if ((cats[cat.id] || 0) > catDisplayed[cat.id]) {
+      const card = document.getElementById("card-" + cat.id);
+      if (card) {
+        card.classList.add("active");
+        setTimeout(() => card.classList.remove("active"), 400);
+      }
+      const cntEl = document.getElementById("cnt-" + cat.id);
+      if (cntEl) {
+        cntEl.classList.add("bump");
+        setTimeout(() => cntEl.classList.remove("bump"), 300);
+      }
+    }
+  });
+
+  // Barre globale
+  const pct = total > 0 ? Math.round(processed / total * 100) : 0;
+  document.getElementById("gp-pct").textContent   = pct + "%";
+  document.getElementById("gp-bar").style.width   = pct + "%";
+  document.getElementById("gp-count").textContent = processed.toLocaleString("fr-FR");
+  document.getElementById("gp-total").textContent = total.toLocaleString("fr-FR");
+  document.getElementById("gp-cost").textContent  = "$" + cost.toFixed(4);
+
+  // ETA
+  const elapsed = (Date.now() - startTime) / 1000;
+  if (processed > 100 && total > processed) {
+    const rate = processed / elapsed;
+    const remaining = Math.round((total - processed) / rate);
+    const mins = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    document.getElementById("gp-eta").textContent =
+      mins > 0 ? mins + "min " + secs + "s" : secs + "s";
+  }
+
+  // Sous-titre
+  document.getElementById("counter-sub").textContent =
+    "sur " + total.toLocaleString("fr-FR") + " emails au total";
+  document.getElementById("status-bar").textContent =
+    "⚡ Traitement en cours — 4 batches en parallèle";
+
+  if (data.status === "done") onDone(processed, total, cost);
+  if (data.status === "error") onError(data.error);
+}
+
+// ── Confettis ────────────────────────────────────────────────────────────────
+function launchConfetti() {
+  const colors = ["#6c63ff","#a78bfa","#4ade80","#fbbf24","#f87171","#60a5fa","#f97316"];
+  const container = document.getElementById("confetti");
+  for (let i = 0; i < 120; i++) {
+    const el = document.createElement("div");
+    el.className = "confetti-piece";
+    el.style.left         = Math.random() * 100 + "vw";
+    el.style.background   = colors[Math.floor(Math.random() * colors.length)];
+    el.style.width        = (6 + Math.random() * 10) + "px";
+    el.style.height       = (6 + Math.random() * 10) + "px";
+    el.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+    el.style.animationDuration  = (1.5 + Math.random() * 2) + "s";
+    el.style.animationDelay     = (Math.random() * 1) + "s";
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+  }
+}
+
+// ── Done / Error ─────────────────────────────────────────────────────────────
+function onDone(processed, total, cost) {
+  cancelAnimationFrame(animFrame);
+  targetCount = total;
+  displayedCount = total;
+  document.getElementById("counter").textContent = total.toLocaleString("fr-FR");
+  document.getElementById("gp-pct").textContent = "100%";
+  document.getElementById("gp-bar").style.width = "100%";
+  document.getElementById("gp-eta").textContent = "Terminé !";
+
+  launchConfetti();
+
+  const overlay = document.getElementById("done-overlay");
+  document.getElementById("done-count").textContent =
+    total.toLocaleString("fr-FR") + " emails triés · coût : $" + cost.toFixed(4);
+  document.getElementById("done-result-btn").href = "/result?token=" + token;
+  overlay.classList.add("show");
+}
+
+function onError(msg) {
+  document.getElementById("status-bar").innerHTML =
+    '<span style="color:var(--danger)">⚠️ Erreur : ' + (msg || "inconnue") + '</span>';
+}
+
+// ── Polling fallback ──────────────────────────────────────────────────────────
+function startPolling() {
+  const interval = setInterval(async () => {
+    try {
+      const res  = await fetch("/api/status/" + token);
+      const data = await res.json();
+      updateUI(data);
+      if (data.status === "done" || data.status === "error") clearInterval(interval);
+    } catch (_) {}
+  }, 2000);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+if (!token) { window.location.href = "/"; }
+
+buildDashboard();
+animateCounters();
+
+const evtSource = new EventSource("/api/process/" + token);
+evtSource.onmessage = function(e) {
+  try { updateUI(JSON.parse(e.data)); } catch (_) {}
+};
+evtSource.onerror = function() {
+  evtSource.close();
+  startPolling();
+};
+</script>
+
+</body>
+</html>

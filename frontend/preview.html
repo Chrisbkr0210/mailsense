@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailSense — Aperçu de classification</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Mail<span>Sense</span></div>
+  <div class="nav-links">
+    <span style="color:var(--text2); font-size:0.9rem;">Étape 2/3 — Aperçu</span>
+  </div>
+</nav>
+
+<main class="container" style="padding: 40px 24px;">
+
+  <!-- Loading state -->
+  <div id="loading" style="text-align:center; padding: 80px 0;">
+    <div class="spinner"></div>
+    <p style="color:var(--text2); margin-top:8px;">Analyse d'un échantillon de vos emails…<br>
+    <small style="font-size:0.8rem;">Peut prendre 20-30 secondes (Claude Sonnet)</small></p>
+  </div>
+
+  <!-- Content -->
+  <div id="content" style="display:none;">
+    <div style="margin-bottom:32px;">
+      <h1 class="section-title">Aperçu de classification</h1>
+      <p class="section-sub">
+        50 emails échantillonnés sur votre boîte de <strong id="total-count">…</strong> emails.
+        Corrigez les catégories incorrectes avant de lancer le tri complet.
+      </p>
+    </div>
+
+    <div class="table-wrap" style="margin-bottom:32px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Expéditeur</th>
+            <th>Objet</th>
+            <th>Catégorie IA</th>
+            <th>Corriger</th>
+          </tr>
+        </thead>
+        <tbody id="email-table-body"></tbody>
+      </table>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div style="color:var(--text2); font-size:0.9rem;">
+        💡 Les corrections servent d'exemples pour améliorer le tri de toute votre boîte.
+      </div>
+      <button id="start-btn" class="btn btn-success btn-lg">
+        ✅ Ça me va, trier toute ma boîte
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
