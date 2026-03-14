@@ -35,8 +35,8 @@ app.mount("/js",  StaticFiles(directory=str(FRONTEND_DIR / "js")),  name="js")
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -66,6 +66,10 @@ async def _cleanup_loop():
 def _html(filename: str) -> HTMLResponse:
     path = FRONTEND_DIR / filename
     return HTMLResponse(content=path.read_text(encoding="utf-8"))
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
