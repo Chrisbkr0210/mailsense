@@ -16,15 +16,14 @@ from config import (
 
 
 def _make_client_config() -> dict:
-    # "installed" type pour compatibilité avec client_secret.json existant.
-    # Google autorise localhost avec n'importe quel port pour les apps installed.
+    # "web" type required for Web Application OAuth clients (HTTPS redirect URIs).
     return {
-        "installed": {
+        "web": {
             "client_id": GOOGLE_CLIENT_ID,
             "client_secret": GOOGLE_CLIENT_SECRET,
             "auth_uri": "https://accounts.google.com/o/oauth2/auth",
             "token_uri": "https://oauth2.googleapis.com/token",
-            "redirect_uris": ["http://localhost", GOOGLE_REDIRECT_URI],
+            "redirect_uris": [GOOGLE_REDIRECT_URI],
         }
     }
 
